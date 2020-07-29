@@ -1,0 +1,16 @@
+html {
+  height: 100%;
+}
+
+body {
+  background-color: gray;
+  margin: 0;
+  padding: 0 20px;
+  display: flex;
+  justify-content: center;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
