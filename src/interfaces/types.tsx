@@ -16,12 +16,12 @@ export type Question = {
 
 export type QuestionState = Question & { answers: string[] }
 
-export enum Difficulty {
-  ANY = '',
-  EASY = 'easy',
-  MEDIUM = 'medium',
-  HARD = 'hard'
-}
+// export enum Difficulty {
+//   ANY = '',
+//   EASY = 'easy',
+//   MEDIUM = 'medium',
+//   HARD = 'hard'
+// }
 
 export type Callback = (e: React.MouseEvent<HTMLButtonElement>) => void;
 
@@ -37,4 +37,12 @@ export interface Props {
 export interface FormProps {
   start: StartFunction
 }
-export type StartFunction = (num: string) => Promise<void>;
+
+export type StartFunction = (questions: string, difficulty: string, category: string) => Promise<void>;
+
+export interface ResultProps {
+  restart: RestartFunction
+  userAnswer: AnswerObject[]
+}
+
+export type RestartFunction = () => void;

@@ -1,22 +1,30 @@
 import React from 'react';
-import { Button } from '@material-ui/core';
+import { Button, Grid, Card, CardContent, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Props } from '../../interfaces/types';
 
 const useStyles = makeStyles({
 	wrapper: {
-		maxWidth: 1100,
-		background: '#ebfeff',
-    borderRadius: 10,
-    border: '2px solid #0085a3',
-    padding: 20,
-    boxShadow: '0px 5px 10px rgba(0, 0, 0, 0.25)',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'column',
+    width: '50vw'
+  },
+  gridWrapper: {
     textAlign: 'center',
-		'> p': {
-			fontSize: '1rem',
-		},
-	},
+    alignItems: 'space-evenly',
+    marginTop: '1.5rem'
+  },
+  btnAnswer: {
+    fontSize: '1.8rem',
+    width: '100%'
+  },
+  question: {
+    textAlign: 'center'
+  }
 });
+
 
 export const QuestionsCard: React.FC<Props> = ({
 	question,
@@ -29,21 +37,30 @@ export const QuestionsCard: React.FC<Props> = ({
 	const classes = useStyles();
 
 	return (
-		<div className={classes.wrapper}>
-			<p>
-				Question: {questionNum} / {totalQuestions}
-			</p>
-			<p dangerouslySetInnerHTML={{ __html: question }} />
-			<div>
+		<Card>
+      <CardContent className={classes.wrapper}>
+        <Typography variant="h4" component="h2">
+          <p>Question: {questionNum} / {totalQuestions}</p>
+        </Typography>
+        <Typography className={classes.question} gutterBottom variant="h4" component="h2" dangerouslySetInnerHTML={{ __html: question }} />
+			<Grid container spacing={2} className={classes.gridWrapper}>
 				{ !userAnswer ? answers.map((answer) => (
-					<div key={answer}>
-						<Button variant='contained' value={answer} disabled={!!userAnswer} onClick={callback}>
+					<Grid item xs={12} md={6} key={answer}>
+						<Button className={classes.btnAnswer} variant='outlined' value={answer} disabled={!!userAnswer} onClick={callback}>
 							<span dangerouslySetInnerHTML={{ __html: answer }} />
 						</Button>
-					</div>
+					</Grid>
 				)) : null}
-        { userAnswer ? <p>Your answer: {userAnswer.answer} The correct answer: {userAnswer.correct_answer}</p> : null}
-			</div>
-		</div>
+        { userAnswer ? (
+        
+        // <p>Your answer: {userAnswer.answer} The correct answer: {userAnswer.correct_answer}</p>
+        <Button className={classes.btnAnswer} variant='outlined'>
+          {userAnswer.answer}
+        </Button> 
+        )
+        : null }
+			</Grid>
+      </CardContent>
+		</Card>
 	);
 };

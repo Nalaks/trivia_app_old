@@ -3,31 +3,19 @@ import { CircularProgress, Button } from '@material-ui/core';
 import { QuestionsCard } from './components/question-card/QuestionsCard';
 import { fetchQuizQuestions } from './API'
 import { makeStyles } from '@material-ui/core/styles';
-import { QuestionState, AnswerObject, Difficulty } from './interfaces/types';
+import { QuestionState, AnswerObject } from './interfaces/types';
 import { QuestionForm } from './components/question-form/QuestionForm';
+import { QuestionResult } from './components/question-result/QuestionResult';
 
 
 const useStyles = makeStyles({
 	wrapper: {
 		display: 'flex',
 		flexDirection: 'column',
+		justifyContent: 'center',
 		alignItems: 'center',
-		'> p': {
-		color: '#fff'
-		},
-		'> h1': {
-			fontFamily: 'Fascinate Inline',
-			fontSize: 70,
-			fontWeight: 400,
-			textAlign: 'center',
-			margin: 20
+		margin: '2.5rem'
 		}
-	},		
-	score: {
-		color: '#fff',
-		fontSize: '2rem',
-		margin: 0
-	}
 })
 
 function App() {
@@ -39,12 +27,18 @@ function App() {
 	const [gameOver, setGameOver] = useState(true);
 	const [totalQuestions, setTotalQuestions] = useState(0)
 
-	const startTrivia = async (num: string) => {
+	const startTrivia = async (questionsNum: string, category: string, difficulty: string) => {
+		let questions = +questionsNum
+		if (questions <= 4) {
+			questions = 5
+		} else if (questions > 50) {
+			questions = 50
+		}
 		setLoading(true)
 		setGameOver(false)
-		setTotalQuestions(+num)
+		setTotalQuestions(questions)
 
-		const newQuestions = await fetchQuizQuestions(+num, Difficulty.EASY)
+		const newQuestions = await fetchQuizQuestions(questions, difficulty, +category)
 		setQuestions(newQuestions)
 
 		setScore(0)
@@ -68,6 +62,12 @@ function App() {
 			}
 			setUserAnswers(prev => [...prev, answerObject])
 		}
+		setTimeout(() => {
+			if (userAnswers.length + 1 === totalQuestions && userAnswers.length > 1) {
+				setGameOver(true)
+			}
+		}, 2000);
+
 	};
 
   const nextQuestion = () => {
@@ -79,16 +79,23 @@ function App() {
 			setNumber(nextQuestion)
 		}
 	};
+
+	const restart = () => {
+		setTotalQuestions(0)
+		setQuestions([])
+		setScore(0)
+		setUserAnswers([])
+		setNumber(0)
+	}
   
 	const classes = useStyles();
-
 
 	return (
 		<Fragment>
 			<div className={classes.wrapper}>
-				<QuestionForm start={startTrivia}/>
-				{ !gameOver ? <p className={classes.score}>Score: { score }</p> : null }
-				{ loading ? <CircularProgress /> : null }
+				{ gameOver && userAnswers.length < 1 ? <QuestionForm start={startTrivia}/> : null }
+				{ !gameOver ? <p>Score: { score }</p> : null }
+				{ loading ? <CircularProgress size='10rem' /> : null }
 				{ !loading && !gameOver ?
 					(
 					<QuestionsCard 
@@ -104,6 +111,9 @@ function App() {
 				{ !gameOver && userAnswers.length !==  totalQuestions && !loading && userAnswers[number] ? <Button onClick={nextQuestion} variant='contained' color='primary'>
 					Next
 				</Button> : null }
+				{ gameOver && userAnswers.length === totalQuestions && userAnswers.length > 1 ? 
+				<QuestionResult restart={restart} userAnswer={userAnswers}/>
+				: null }
 			</div>
 		</Fragment>
 	);
