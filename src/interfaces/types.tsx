@@ -50,3 +50,7 @@ export type RestartFunction = () => void;
 export interface ScoreProps {
 	score: number;
 }
+
+export interface NextProps {
+	nextQuestion: () => void;
+}

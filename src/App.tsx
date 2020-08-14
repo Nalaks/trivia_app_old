@@ -1,5 +1,5 @@
 // dependencies
-import React, { Fragment, useState } from 'react';
+import React, { useState } from 'react';
 import { CircularProgress, Button } from '@material-ui/core';
 import { QuestionState, AnswerObject } from './interfaces/types';
 import styled from 'styled-components';
@@ -9,6 +9,7 @@ import QuestionsCard from './components/question-card/QuestionsCard';
 import QuestionForm from './components/question-form/QuestionForm';
 import QuestionResult from './components/question-result/QuestionResult';
 import Score from './components/score/Score';
+import Next from './components/next/Next';
 
 // api
 import { fetchQuizQuestions } from './API';
@@ -97,7 +98,7 @@ function App() {
 	return (
 		<AppWrapper>
 			{gameOver && userAnswers.length < 1 ? <QuestionForm start={startTrivia} /> : null}
-			{!gameOver ? <Score score={score} /> : null}
+			{!gameOver && !loading ? <Score score={score} /> : null}
 			{loading ? <CircularProgress size={100} /> : null}
 			{!loading && !gameOver ? (
 				<QuestionsCard
@@ -110,9 +111,7 @@ function App() {
 				/>
 			) : null}
 			{!gameOver && userAnswers.length !== totalQuestions && !loading && userAnswers[number] ? (
-				<Button onClick={nextQuestion} variant='contained' color='primary'>
-					Next
-				</Button>
+				<Next nextQuestion={nextQuestion} />
 			) : null}
 			{gameOver && userAnswers.length === totalQuestions && userAnswers.length > 1 ? (
 				<QuestionResult restart={restart} userAnswer={userAnswers} />

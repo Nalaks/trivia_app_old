@@ -38,7 +38,7 @@ const QuestionForm: React.FC<FormProps> = ({ start }) => {
 
 	return (
 		<CardFormWrapper>
-			<Heading>Trivia Game</Heading>
+			<Heading>Trivia App</Heading>
 			<QuestionNumberField>
 				<TextField
 					id='outlined-number'
