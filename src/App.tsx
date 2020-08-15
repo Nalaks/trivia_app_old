@@ -1,6 +1,6 @@
 // dependencies
 import React, { useState } from 'react';
-import { CircularProgress, Button } from '@material-ui/core';
+import { CircularProgress } from '@material-ui/core';
 import { QuestionState, AnswerObject } from './interfaces/types';
 import styled from 'styled-components';
 
@@ -10,6 +10,7 @@ import QuestionForm from './components/question-form/QuestionForm';
 import QuestionResult from './components/question-result/QuestionResult';
 import Score from './components/score/Score';
 import Next from './components/next/Next';
+import Redirect from './components/redirect/Redirect';
 
 // api
 import { fetchQuizQuestions } from './API';
@@ -113,6 +114,7 @@ function App() {
 			{!gameOver && userAnswers.length !== totalQuestions && !loading && userAnswers[number] ? (
 				<Next nextQuestion={nextQuestion} />
 			) : null}
+			{!gameOver && userAnswers.length === totalQuestions && userAnswers.length > 1 ? <Redirect /> : null}
 			{gameOver && userAnswers.length === totalQuestions && userAnswers.length > 1 ? (
 				<QuestionResult restart={restart} userAnswer={userAnswers} />
 			) : null}
